@@ -1,0 +1,126 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #2193b0, #6dd5ed);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Animated Header */
+.animated-header {
+    text-align: center;
+    padding: 20px 0;
+    background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    color: white;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    animation: header-slide-in 2s ease-out;
+}
+
+.animated-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+    animation: color-pulse 6s infinite;
+}
+
+/* Keyframe Animations */
+@keyframes header-slide-in {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes color-pulse {
+    0%, 100% {
+        color: #ffffff;
+    }
+    50% {
+        color: #cce7ff;
+    }
+}
+
+/* Container Section */
+.container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    margin-top: 120px; /* Account for fixed header */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #34495e;
+}
+
+select, input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+select:focus, input:focus {
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Result Section */
+.result-section {
+    background: linear-gradient(135deg, #6dd5ed, #2193b0);
+    color: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #ffffff;
+    text-shadow: 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 1.2rem;
+}
+
+.result-item {
+    background: #ffffff;
+    color: #34495e;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px
