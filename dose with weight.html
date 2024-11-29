@@ -34,19 +34,28 @@
             text-align: center;
         }
 
-        label, select, input {
+        label {
             display: block;
-            width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 1rem;
         }
 
-        input, select {
-            padding: 12px;
+        select, input {
+            padding: 10px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px;
             color: #333;
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: 70%;
+            height: 40px;
+        }
+
+        input {
+            width: calc(50% - 10px);
         }
 
         input:focus, select:focus {
@@ -58,37 +67,38 @@
             margin-top: 20px;
         }
 
-        .species-output {
-            background: rgba(255, 255, 255, 0.15);
+        .result-section {
+            background: #000000;
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-top: 20px;
             text-align: left;
         }
 
-        .species-name {
-            font-size: 1.2rem;
+        .result-species {
+            font-size: 1.3rem;
             font-weight: bold;
             color: #ffd700;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
-        .dose-text, .absolute-dose-text, .actual-dose-text {
+        .result-item {
             font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .dose-text {
-            color: #f0e68c;
-        }
-
-        .absolute-dose-text {
-            color: #add8e6;
-        }
-
-        .actual-dose-text {
-            color: #90ee90;
+            margin-bottom: 10px;
             font-weight: bold;
+        }
+
+        .result-item:nth-child(2) {
+            color: #ccffff;
+        }
+
+        .result-item:nth-child(3) {
+            color: #ffff00;
+        }
+
+        .result-item:nth-child(4) {
+            color: #00ff00;
         }
 
         .weight-inputs {
@@ -114,8 +124,9 @@
 <body>
     <h1>Dose Converter</h1>
     <div class="container">
-        <label for="species">Choose Species:</label>
-        <select id="species" onchange="calculateDoses()">
+        <!-- Initial Inputs -->
+        <label for="initial-species">Choose Initial Species:</label>
+        <select id="initial-species" onchange="resetResults()">
             <option value="human">Human</option>
             <option value="dog">Dog</option>
             <option value="monkey">Monkey</option>
@@ -127,9 +138,36 @@
         </select>
 
         <label for="dose">Enter Dose (mg/kg):</label>
-        <input type="number" id="dose" placeholder="Enter dose in mg/kg" oninput="calculateDoses()">
+        <input type="number" id="dose" placeholder="Enter dose in mg/kg" oninput="resetResults()">
 
-        <div class="output" id="output"></div>
+        <!-- Target Species Selection -->
+        <label for="target-species">Choose Target Species:</label>
+        <select id="target-species" onchange="calculateResults()">
+            <option value="human">Human</option>
+            <option value="dog">Dog</option>
+            <option value="monkey">Monkey</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+            <option value="g_pig">Guinea Pig</option>
+            <option value="rat">Rat</option>
+            <option value="mouse">Mouse</option>
+        </select>
+
+        <!-- Weight Inputs -->
+        <div class="weight-inputs">
+            <input type="number" id="weight-kg" placeholder="Weight (kg)" oninput="calculateResults()">
+            <input type="number" id="weight-gm" placeholder="Weight (g)" oninput="calculateResults()">
+        </div>
+
+        <!-- Output Section -->
+        <div class="output">
+            <div class="result-section" id="result">
+                <div class="result-species" id="target-species-name">--</div>
+                <div class="result-item" id="dose-result">Dose: -- mg/kg</div>
+                <div class="result-item" id="absolute-dose-result">Absolute Dose: -- mg</div>
+                <div class="result-item" id="actual-dose-result">Actual Dose: -- mg</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -155,51 +193,35 @@
             mouse: { human: 387.9, dog: 124.2, monkey: 64.1, cat: 29.7, rabbit: 27.8, g_pig: 12.25, rat: 7, mouse: 1 }
         };
 
-        function calculateDoses() {
-            const species = document.getElementById("species").value;
+        function resetResults() {
+            document.getElementById("target-species-name").innerText = "";
+            document.getElementById("dose-result").innerText = "Dose: -- mg/kg";
+            document.getElementById("absolute-dose-result").innerText = "Absolute Dose: -- mg";
+            document.getElementById("actual-dose-result").innerText = "Actual Dose: -- mg";
+        }
+
+        function calculateResults() {
+            const initialSpecies = document.getElementById("initial-species").value;
             const dose = parseFloat(document.getElementById("dose").value);
+            const targetSpecies = document.getElementById("target-species").value;
+            const weightKg = parseFloat(document.getElementById("weight-kg").value) || 0;
+            const weightGm = parseFloat(document.getElementById("weight-gm").value) || 0;
 
             if (isNaN(dose) || dose <= 0) {
-                document.getElementById("output").innerHTML = "<p>Please enter a valid dose.</p>";
+                resetResults();
                 return;
             }
 
-            const absoluteDose = dose * averageWeights[species];
-            const output = document.getElementById("output");
-            output.innerHTML = "";
+            const totalWeight = weightKg + weightGm / 1000; // Convert gm to kg
+            const conversionFactor = conversionFactors[initialSpecies][targetSpecies];
+            const absoluteDose = dose * averageWeights[initialSpecies] * conversionFactor;
+            const dosePerKg = absoluteDose / averageWeights[targetSpecies];
+            const actualDose = totalWeight * dosePerKg;
 
-            for (let targetSpecies in averageWeights) {
-                const conversionFactor = conversionFactors[species][targetSpecies];
-                const convertedAbsoluteDose = absoluteDose * conversionFactor;
-                const targetDose = convertedAbsoluteDose / averageWeights[targetSpecies];
-
-                output.innerHTML += `
-                    <div class="species-output">
-                        <div class="species-name">${targetSpecies.charAt(0).toUpperCase() + targetSpecies.slice(1)}</div>
-                        <div class="dose-text">Dose: ${targetDose.toFixed(2)} mg/kg</div>
-                        <div class="absolute-dose-text">Absolute Dose: ${convertedAbsoluteDose.toFixed(2)} mg</div>
-
-                        <div class="weight-inputs">
-                            <input type="number" id="kg_${targetSpecies}" placeholder="Weight (kg)" oninput="calculateActualDose('${targetSpecies}', ${targetDose})">
-                            <input type="number" id="gm_${targetSpecies}" placeholder="Weight (g)" oninput="calculateActualDose('${targetSpecies}', ${targetDose})">
-                        </div>
-                        <div class="actual-dose-text" id="actual-dose-${targetSpecies}"></div>
-                    </div>
-                `;
-            }
-        }
-
-        function calculateActualDose(species, dosePerKg) {
-            const kg = parseFloat(document.getElementById(`kg_${species}`).value) || 0;
-            const gm = parseFloat(document.getElementById(`gm_${species}`).value) || 0;
-
-            const totalKg = kg + (gm / 1000); // Convert grams to kilograms
-            if (totalKg > 0) {
-                const actualDose = totalKg * dosePerKg; // Multiply by dose per kg
-                document.getElementById(`actual-dose-${species}`).innerText = `Actual Dose: ${actualDose.toFixed(2)} mg`;
-            } else {
-                document.getElementById(`actual-dose-${species}`).innerText = "";
-            }
+            document.getElementById("target-species-name").innerText = ` ${targetSpecies.charAt(0).toUpperCase() + targetSpecies.slice(1)}`;
+            document.getElementById("dose-result").innerText = `Dose: ${dosePerKg.toFixed(2)} mg/kg`;
+            document.getElementById("absolute-dose-result").innerText = `Absolute Dose: ${absoluteDose.toFixed(2)} mg`;
+            document.getElementById("actual-dose-result").innerText = `Actual Dose: ${actualDose.toFixed(2)} mg`;
         }
     </script>
 </body>
