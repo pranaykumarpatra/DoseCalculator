@@ -101,13 +101,22 @@
             font-weight: bold;
         }
 
+        /* Compact weight input styling */
         .weight-inputs {
+            display: flex;
+            justify-content: center;
             margin-top: 10px;
         }
 
         .weight-inputs input {
-            width: 45%;
-            margin-right: 5%;
+            width: 45%;  /* Adjust width to fit within the container */
+            margin-right: 10px;  /* Space between kg and gm inputs */
+            padding: 8px;
+            font-size: 14px;  /* Smaller text for compact size */
+        }
+
+        .weight-inputs input:last-child {
+            margin-right: 0;  /* Remove margin on last input */
         }
 
         /* Animations */
