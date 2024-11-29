@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dose Converter</title>
+    <style>
+        /* Body Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        /* Container Styling */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        label, select, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        input, select {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 10px #6a11cb;
+        }
+
+        /* Output Section */
+        .output {
+            margin-top: 20px;
+        }
+
+        .species-output {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, background 0.3s ease;
+            text-align: left;
+        }
+
+        .species-output:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .species-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .dose-text, .absolute-dose-text, .actual-dose-text {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .dose-text {
+            color: #f0e68c;
+        }
+
+        .absolute-dose-text {
+            color: #add8e6;
+        }
+
+        .actual-dose-text {
+            color: #90ee90;
+            font-weight: bold;
+        }
+
+        .weight-inputs {
+            margin-top: 10px;
+        }
+
+        .weight-inputs input {
+            width: 45%;
+            margin-right: 5%;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .species-output {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dose Converter</h1>
+    <div class="container">
+        <label for="species">Choose Species:</label>
+        <select id="species" onchange="calculateDoses()">
+            <option value="human">Human</option>
+            <option value="dog">Dog</option>
+            <option value="monkey">Monkey</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+            <option value="g_pig">Guinea Pig</option>
+            <option value="rat">Rat</option>
+            <option value="mouse">Mouse</option>
+        </select>
+
+        <label for="dose">Enter Dose (mg/kg):</label>
+        <input type="number" id="dose" placeholder="Enter dose in mg/kg" oninput="calculateDoses()">
+
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        const averageWeights = {
+            human: 70,
+            dog: 12,
+            monkey: 4,
+            cat: 2,
+            rabbit: 1.5,
+            g_pig: 0.4,
+            rat: 0.2,
+            mouse: 0.02
+        };
+
+        const conversionFactors = {
+            human: { human: 1, dog: 0.32, monkey: 0.16, cat: 0.076, rabbit: 0.07, g_pig: 0.031, rat: 0.018, mouse: 0.0026 },
+            dog: { human: 3.1, dog: 1, monkey: 0.52, cat: 0.24, rabbit: 0.22, g_pig: 0.1, rat: 0.06, mouse: 0.008 },
+            monkey: { human: 6.1, dog: 1.9, monkey: 1, cat: 0.45, rabbit: 0.42, g_pig: 0.19, rat: 0.11, mouse: 0.016 },
+            cat: { human: 13, dog: 4.1, monkey: 2.2, cat: 1, rabbit: 0.92, g_pig: 0.41, rat: 0.23, mouse: 0.03 },
+            rabbit: { human: 14.2, dog: 4.5, monkey: 2.4, cat: 1.08, rabbit: 1, g_pig: 0.44, rat: 0.25, mouse: 0.04 },
+            g_pig: { human: 31.3, dog: 10.2, monkey: 5.2, cat: 2.4, rabbit: 2.25, g_pig: 1, rat: 0.57, mouse: 0.08 },
+            rat: { human: 56, dog: 17.8, monkey: 9.2, cat: 4.2, rabbit: 3.9, g_pig: 1.74, rat: 1, mouse: 0.14 },
+            mouse: { human: 387.9, dog: 124.2, monkey: 64.1, cat: 29.7, rabbit: 27.8, g_pig: 12.25, rat: 7, mouse: 1 }
+        };
+
+        function calculateDoses() {
+            const species = document.getElementById("species").value;
+            const dose = parseFloat(document.getElementById("dose").value);
+
+            if (isNaN(dose) || dose <= 0) {
+                document.getElementById("output").innerHTML = "<p>Please enter a valid dose.</p>";
+                return;
+            }
+
+            const absoluteDose = dose * averageWeights[species];
+            const output = document.getElementById("output");
+
+            output.innerHTML = "";
+
+            for (let targetSpecies in averageWeights) {
+                const conversionFactor = conversionFactors[species][targetSpecies];
+                const convertedAbsoluteDose = absoluteDose * conversionFactor;
+                const targetDose = convertedAbsoluteDose / averageWeights[targetSpecies];
+
+                output.innerHTML += `
+                    <div class="species-output">
+                        <div class="species-name">${targetSpecies.charAt(0).toUpperCase() + targetSpecies.slice(1)}</div>
+                        <div class="dose-text">Dose: ${targetDose.toFixed(2)} mg/kg</div>
+                        <div class="absolute-dose-text">Absolute Dose: ${convertedAbsoluteDose.toFixed(2)} mg</div>
+                        
+                        <!-- Input for additional weight -->
+                        <div class="weight-inputs">
+                            <input type="number" id="kg_${targetSpecies}" placeholder="Weight (kg)" oninput="calculateActualDose('${targetSpecies}')">
+                            <input type="number" id="gm_${targetSpecies}" placeholder="Weight (g)" oninput="calculateActualDose('${targetSpecies}')">
+                        </div>
+                        <div class="actual-dose-text" id="actual-dose-${targetSpecies}"></div>
+                    </div>
+                `;
+            }
+        }
+
+        function calculateActualDose(species) {
+            const kg = parseFloat(document.getElementById(`kg_${species}`).value) || 0;
+            const gm = parseFloat(document.getElementById(`gm_${species}`).value) || 0;
+
+            const totalKg = kg + (gm / 1000);  // Convert grams to kilograms
+
+            if (totalKg > 0) {
+                const dose = parseFloat(document.getElementById("dose").value);
+                const speciesDose = dose * conversionFactors["human"][species] * averageWeights[species]; // Recalculate the dose for the selected species
+                const actualDose = totalKg * speciesDose;  // Actual dose based on the entered weight
+
+                document.getElementById(`actual-dose-${species}`).innerText = `Actual Dose for ${totalKg} kg: ${actualDose.toFixed(2)} mg`;
+            } else {
+                document.getElementById(`actual-dose-${species}`).innerText = "";
+            }
+        }
+    </script>
+</body>
+</html>
