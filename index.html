@@ -4,136 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dose Converter</title>
-    <style>
-        /* Body Styling */
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            animation: fadeInDown 1s ease-in-out;
-        }
-
-        /* Container Styling */
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        label, select, input {
-            display: block;
-            width: 100%;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-
-        input, select {
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            box-shadow: 0 0 10px #6a11cb;
-        }
-
-        /* Output Section */
-        .output {
-            margin-top: 20px;
-        }
-
-        .species-output {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, background 0.3s ease;
-            text-align: left;
-        }
-
-        .species-output:hover {
-            transform: scale(1.05);
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .species-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 8px;
-        }
-
-        .dose-text, .absolute-dose-text {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .dose-text {
-            color: #f0e68c;
-        }
-
-        .absolute-dose-text {
-            color: #add8e6;
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .species-output {
-            animation: fadeIn 0.8s ease-in-out;
-        }
-    </style>
+    <meta name="description" content="Convert drug doses between humans and laboratory animals, and work out the actual dose for an animal's body weight.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#fbf7ec" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e2622" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect x='3' y='3' width='42' height='42' rx='12' fill='%23ffe169' stroke='%232a2622' stroke-width='3'/><g transform='rotate(-45 24 24)'><path d='M24 17h-7a7 7 0 0 0 0 14h7z' fill='%23ffadc4'/><rect x='10' y='17' width='28' height='14' rx='7' fill='none' stroke='%232a2622' stroke-width='3'/><path d='M24 17v14' stroke='%232a2622' stroke-width='3'/></g></svg>">
+    <link rel="preload" href="fonts/PatrickHand-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Dose Converter</h1>
-    <div class="container">
-        <label for="species">Choose Species:</label>
-        <select id="species" onchange="calculateDoses()">
-            <option value="human">Human</option>
-            <option value="dog">Dog</option>
-            <option value="monkey">Monkey</option>
-            <option value="cat">Cat</option>
-            <option value="rabbit">Rabbit</option>
-            <option value="g_pig">Guinea Pig</option>
-            <option value="rat">Rat</option>
-            <option value="mouse">Mouse</option>
-        </select>
+    <header class="masthead">
+        <div class="masthead-inner">
+            <span class="logo" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(-45 24 24)"><path d="M24 16.5h-7.5a7.5 7.5 0 0 0 0 15H24z" style="fill:var(--hl-pink)"/><rect x="9" y="16.5" width="30" height="15" rx="7.5"/><path d="M24 16.5v15"/><path d="M13.5 21.5c.8-1 2-1.6 3.5-1.6"/></g></svg>
+            </span>
+            <div>
+                <h1>Dose Converter</h1>
+                <svg class="squiggle" viewBox="0 0 250 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9c20-8 36 6 56-1s34-7 53 0 35 6 54-1 31-6 52 0 22 4 29 1" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+                <p class="tagline">Convert a dose between species, then work out the exact dose for your animal.</p>
+            </div>
+        </div>
+        <svg class="deco deco-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/></svg>
+        <svg class="deco deco-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
+        <svg class="deco deco-3" viewBox="0 0 64 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 7h34v10H14zM48 12h8M56 6v12M14 12H4M22 7v4M30 7v4M38 7v4"/></svg>
+    </header>
 
-        <label for="dose">Enter Dose (mg/kg):</label>
-        <input type="number" id="dose" placeholder="Enter dose in mg/kg" oninput="calculateDoses()">
+    <main class="layout">
+        <!-- Step 1 -->
+        <section class="card step-1" aria-labelledby="step1-title">
+            <h2 class="step-title" id="step1-title"><span class="step-num">1</span> Starting dose</h2>
 
-        <div class="output" id="output"></div>
-    </div>
+            <fieldset class="field">
+                <legend class="label">From which species?</legend>
+                <div class="species-grid source-grid" id="source-grid"></div>
+            </fieldset>
+
+            <div class="field">
+                <label class="label" for="dose">Dose</label>
+                <div class="dose-input" id="dose-box">
+                    <input type="number" id="dose" inputmode="decimal" min="0" step="any" placeholder="0" autocomplete="off" aria-describedby="dose-hint">
+                    <button type="button" class="clear-btn" id="clear-dose" aria-label="Clear dose" hidden>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                    <span class="unit">mg/kg</span>
+                </div>
+                <p class="hint" id="dose-hint">Dose in mg per kg of body weight.</p>
+            </div>
+        </section>
+
+        <!-- Step 2 -->
+        <section class="card step-2" id="animal-card" aria-labelledby="step2-title">
+            <h2 class="step-title" id="step2-title">
+                <span class="step-num">2</span> Dose for your animal
+                <svg class="title-doodle" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 10v27M15 39.5c3-1.2 15-1.2 18 0M10 15.5c5 1.4 23 1.4 28 0"/><path d="M10 15.5 5.5 27M10 15.5 14.5 27M4.5 27c0 3.4 2.4 5 5.5 5s5.5-1.6 5.5-5z"/><path d="M38 15.5 33.5 27M38 15.5 42.5 27M32.5 27c0 3.4 2.4 5 5.5 5s5.5-1.6 5.5-5z"/><circle cx="24" cy="8.5" r="2"/></svg>
+            </h2>
+
+            <fieldset class="field">
+                <legend class="label">Which animal?</legend>
+                <div class="species-grid target-grid" id="target-grid"></div>
+            </fieldset>
+
+            <div class="field">
+                <span class="label" id="weight-label">How much does it weigh?</span>
+                <div class="weight-inputs" role="group" aria-labelledby="weight-label">
+                    <div class="unit-input">
+                        <input type="number" id="weight-kg" inputmode="decimal" min="0" step="any" placeholder="0" autocomplete="off" aria-label="Weight in kilograms">
+                        <span class="unit">kg</span>
+                    </div>
+                    <span class="plus" aria-hidden="true">+</span>
+                    <div class="unit-input">
+                        <input type="number" id="weight-gm" inputmode="decimal" min="0" step="any" placeholder="0" autocomplete="off" aria-label="Weight in grams, added to the kilograms">
+                        <span class="unit">g</span>
+                    </div>
+                </div>
+                <p class="hint">kg and g add up (1&nbsp;kg + 250&nbsp;g = 1.25&nbsp;kg). <button type="button" class="link-btn" id="use-standard">Use standard weight</button></p>
+            </div>
+
+            <div class="note" id="note" aria-live="polite">
+                <div class="note-label" id="note-label">Actual dose</div>
+                <div class="note-value" id="actual-value">&mdash;</div>
+                <div class="note-sub" id="actual-note"></div>
+                <dl class="note-facts">
+                    <div>
+                        <dt>Dose</dt>
+                        <dd id="fact-dose">&mdash;</dd>
+                    </div>
+                    <div>
+                        <dt>Absolute dose</dt>
+                        <dd><span id="fact-abs">&mdash;</span> <small id="fact-abs-std"></small></dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section class="card glance" aria-labelledby="glance-title">
+            <div class="glance-head">
+                <div>
+                    <h2 class="step-title" id="glance-title">
+                        <span class="step-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/></svg></span>
+                        All species at a glance
+                    </h2>
+                    <p class="hint" id="glance-hint">Enter a dose in step 1 to fill these in.</p>
+                </div>
+                <button type="button" class="btn" id="copy-btn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span id="copy-label">Copy</span>
+                </button>
+            </div>
+            <ul class="glance-grid" id="glance"></ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Results are estimates for research and educational use. Always check doses against primary references before use.</p>
+        <p><a href="policy.html">Privacy policy</a></p>
+    </footer>
 
     <script>
+        // ---- Calculation data and logic (unchanged from the original pages) ----
+
         const averageWeights = {
             human: 70,
             dog: 12,
@@ -156,34 +146,387 @@
             mouse: { human: 387.9, dog: 124.2, monkey: 64.1, cat: 29.7, rabbit: 27.8, g_pig: 12.25, rat: 7, mouse: 1 }
         };
 
-        function calculateDoses() {
-            const species = document.getElementById("species").value;
-            const dose = parseFloat(document.getElementById("dose").value);
-
-            if (isNaN(dose) || dose <= 0) {
-                document.getElementById("output").innerHTML = "<p>Please enter a valid dose.</p>";
-                return;
-            }
-
+        // Same steps as calculateDoses() in the original index.html
+        function convertDose(species, dose, targetSpecies) {
             const absoluteDose = dose * averageWeights[species];
-            const output = document.getElementById("output");
-
-            output.innerHTML = "";
-
-            for (let targetSpecies in averageWeights) {
-                const conversionFactor = conversionFactors[species][targetSpecies];
-                const convertedAbsoluteDose = absoluteDose * conversionFactor;
-                const targetDose = convertedAbsoluteDose / averageWeights[targetSpecies];
-
-                output.innerHTML += `
-                    <div class="species-output">
-                        <div class="species-name">${targetSpecies.charAt(0).toUpperCase() + targetSpecies.slice(1)}</div>
-                        <div class="dose-text">Dose: ${targetDose.toFixed(2)} mg/kg</div>
-                        <div class="absolute-dose-text">Absolute Dose: ${convertedAbsoluteDose.toFixed(2)} mg</div>
-                    </div>
-                `;
-            }
+            const conversionFactor = conversionFactors[species][targetSpecies];
+            const convertedAbsoluteDose = absoluteDose * conversionFactor;
+            const targetDose = convertedAbsoluteDose / averageWeights[targetSpecies];
+            return { targetDose, convertedAbsoluteDose };
         }
+
+        // Same steps as calculateResults() in the original "dose with weight.html"
+        function calculateActualDose(initialSpecies, dose, targetSpecies, weightKg, weightGm) {
+            const totalWeight = weightKg + weightGm / 1000; // Convert gm to kg
+            const conversionFactor = conversionFactors[initialSpecies][targetSpecies];
+            const absoluteDose = dose * averageWeights[initialSpecies] * conversionFactor;
+            const dosePerKg = absoluteDose / averageWeights[targetSpecies];
+            const actualDose = totalWeight * dosePerKg;
+            return { totalWeight, dosePerKg, absoluteDose, actualDose };
+        }
+
+        // ---- End of calculation logic ----
+
+        (function () {
+            const speciesNames = {
+                human: "Human",
+                dog: "Dog",
+                monkey: "Monkey",
+                cat: "Cat",
+                rabbit: "Rabbit",
+                g_pig: "Guinea pig",
+                rat: "Rat",
+                mouse: "Mouse"
+            };
+
+            // Hand-drawn style line icons, 48x48
+            const speciesIcons = {
+                human: '<circle cx="24" cy="15.5" r="7.5"/><path d="M9.5 41.5c.8-8.5 6.6-14 14.5-14s13.7 5.5 14.5 14"/><path d="M20 28.2l4 4.6 4-4.6"/><path stroke-width="3" d="M21.2 14.8h.01M26.8 14.8h.01"/><path d="M21.6 18.6c1.4 1.1 3.4 1.1 4.8 0"/>',
+                dog: '<path d="M16 15c1.5-4 4.5-6 8-6s6.5 2 8 6c1 3 1.2 7 .8 11-.6 7-4.2 12-8.8 12s-8.2-5-8.8-12c-.4-4-.2-8 .8-11z"/><path d="M16.4 13.6c-4-2.2-9-.2-9.4 4.9-.3 4 1.6 7.7 4.6 9.2 1.9-1.4 3.4-4.4 4.2-7.9"/><path d="M31.6 13.6c4-2.2 9-.2 9.4 4.9.3 4-1.6 7.7-4.6 9.2-1.9-1.4-3.4-4.4-4.2-7.9"/><path stroke-width="3.2" d="M20.5 21.5h.01M27.5 21.5h.01"/><path fill="currentColor" d="M22 28c1.3-.8 2.7-.8 4 0-.4 1.3-1.1 2-2 2s-1.6-.7-2-2z"/><path d="M24 30v2.4M21 33.4c1.3 1 2.4.9 3-.6.6 1.5 1.7 1.6 3 .6"/>',
+                monkey: '<path d="M12.7 21.2c-4-1.6-7.7.8-7.7 4.3s3.7 5.9 7.7 4.3"/><path d="M35.3 21.2c4-1.6 7.7.8 7.7 4.3s-3.7 5.9-7.7 4.3"/><circle cx="24" cy="25.5" r="12"/><path d="M24 21.8c-1.6-2.6-6.6-2.4-7.5 1.1-.7 2.4.3 4 1.3 4.9-.9 3.2 1.6 7.4 6.2 7.4s7.1-4.2 6.2-7.4c1-.9 2-2.5 1.3-4.9-.9-3.5-5.9-3.7-7.5-1.1z"/><path stroke-width="3.2" d="M20.8 24.8h.01M27.2 24.8h.01"/><path stroke-width="2.4" d="M23 29.6h.01M25 29.6h.01"/><path d="M21.6 32c1.5 1.1 3.3 1.1 4.8 0"/><path d="M21.5 13.9c.4-2.3 2.6-3.4 4.6-2.4"/>',
+                cat: '<path d="M12.5 22 11 9.5l8.5 6c3-1.2 6-1.2 9 0l8.5-6L35.5 22c1 2 1.5 4 1.5 6.5 0 6.6-5.6 11-13 11s-13-4.4-13-11c0-2.5.5-4.5 1.5-6.5z"/><path d="M13.6 13.4l.9 4.6M34.4 13.4l-.9 4.6"/><path stroke-width="2.8" d="M19 25.4v1.8M29 25.4v1.8"/><path fill="currentColor" d="M22.6 30.4h2.8L24 32z"/><path d="M24 32c-.4 1.6-1.9 2.3-3.2 1.4M24 32c.4 1.6 1.9 2.3 3.2 1.4"/><path d="M4.5 28.5l9 1.2M5 33.5l8.5-1.8M43.5 28.5l-9 1.2M43 33.5l-8.5-1.8"/>',
+                rabbit: '<path d="M20 19.8c-2.6-4.2-4.1-10.6-2.6-14.1 1.5-2.6 4.6-1 5.6 3 .8 3.1.8 7.2.5 10.6"/><path d="M28 19.8c2.6-4.2 4.1-10.6 2.6-14.1-1.5-2.6-4.6-1-5.6 3-.8 3.1-.8 7.2-.5 10.6"/><circle cx="24" cy="30.5" r="11"/><path d="M19.4 9c.4 2.8 1.1 5.6 1.9 7.6M28.6 9c-.4 2.8-1.1 5.6-1.9 7.6"/><path stroke-width="3.2" d="M20 28.5h.01M28 28.5h.01"/><path fill="currentColor" d="M22.7 32.4h2.6L24 33.8z"/><path d="M24 33.8v1.6M21.8 36.2c.9.7 1.6.6 2.2-.3.6.9 1.3 1 2.2.3"/>',
+                g_pig: '<path d="M7.5 31c0-8.5 7-14.5 16.5-14.5 7.5 0 13 4 15 9.5.8 2.3 2.5 2.8 2.5 5 0 4.6-4.5 7.5-10 7.5H14.5c-4.5 0-7-3-7-7.5z"/><path d="M29.5 17.4c.3-3.2 3.6-4.3 5.5 1.6"/><path d="M17 18.6c2.6 3.6 2.6 9 .4 13.6"/><path stroke-width="3.2" d="M34.5 24.5h.01"/><path stroke-width="2.6" d="M41 29.6h.01"/><path d="M38.6 33c.8.6 1.8.6 2.4 0"/><path d="M15 38.5v2.6M31 38.5v2.6"/>',
+                rat: '<path d="M11 33.5c0-6.5 6-11.5 13.5-11.5 4.5 0 8 1.8 10.8 4.5l6.7 3.8c.6.4.6 1.2 0 1.6l-6.2 2.6c-3 2.3-7 3.5-11.8 3.5H14c-1.8 0-3-1.6-3-4.5z"/><path d="M27.4 22.4c-.6-3.1 1.4-5.2 3.8-4.8 2.3.4 3.4 3.4 2 7.3"/><path stroke-width="3" d="M36.2 28.4h.01"/><path d="M40.5 33.2l3.3 2M39.3 33.8l2 3"/><path d="M11.4 35.5c-4 .4-7 2.6-6.4 5.6.5 2.6 4.2 3.1 6.8 1.3"/><path d="M17.5 38v3M29 37.6v3"/>',
+                mouse: '<path d="M16.2 21.9A7.2 7.2 0 1 1 20.2 19.4"/><path d="M31.8 21.9A7.2 7.2 0 1 0 27.8 19.4"/><path d="M24 19c6.5 0 11 4.8 11 10.5 0 6.5-5 11-11 11s-11-4.5-11-11C13 23.8 17.5 19 24 19z"/><path stroke-width="3.2" d="M20.2 28h.01M27.8 28h.01"/><circle cx="24" cy="32.6" r="1.3" fill="currentColor"/><path d="M18.5 32.6l-8-1.4M18.5 34.6l-7.4 1.8M29.5 32.6l8-1.4M29.5 34.6l7.4 1.8"/>'
+            };
+
+            function icon(sp) {
+                return '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + speciesIcons[sp] + "</svg>";
+            }
+
+            const arrowIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13c5-1 11-1 17-.5M15 8l5 4.5-5 4"/></svg>';
+            const checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13c2 1.5 3.5 3.5 5 5.5C12 12 15.5 8 20 5"/></svg>';
+
+            const speciesList = Object.keys(averageWeights);
+            const DASH = "—";
+
+            const state = {
+                source: "human",
+                target: "human",
+                weights: {}, // remembered per animal for this visit only
+                lastActual: null
+            };
+
+            const el = {
+                sourceGrid: document.getElementById("source-grid"),
+                targetGrid: document.getElementById("target-grid"),
+                dose: document.getElementById("dose"),
+                doseBox: document.getElementById("dose-box"),
+                doseHint: document.getElementById("dose-hint"),
+                clearDose: document.getElementById("clear-dose"),
+                animalCard: document.getElementById("animal-card"),
+                weightLabel: document.getElementById("weight-label"),
+                weightKg: document.getElementById("weight-kg"),
+                weightGm: document.getElementById("weight-gm"),
+                useStandard: document.getElementById("use-standard"),
+                note: document.getElementById("note"),
+                noteLabel: document.getElementById("note-label"),
+                actualValue: document.getElementById("actual-value"),
+                actualNote: document.getElementById("actual-note"),
+                factDose: document.getElementById("fact-dose"),
+                factAbsStd: document.getElementById("fact-abs-std"),
+                factAbs: document.getElementById("fact-abs"),
+                glance: document.getElementById("glance"),
+                glanceHint: document.getElementById("glance-hint"),
+                copyBtn: document.getElementById("copy-btn"),
+                copyLabel: document.getElementById("copy-label")
+            };
+
+            const cards = {};
+
+            function formatWeight(kg) {
+                return kg >= 1 ? kg + " kg" : Math.round(kg * 1000) + " g";
+            }
+
+            function formatKg(kg) {
+                return String(Number(kg.toFixed(4)));
+            }
+
+            function lower(sp) {
+                return speciesNames[sp].toLowerCase();
+            }
+
+            function readDose() {
+                const raw = el.dose.value;
+                const dose = parseFloat(raw);
+                const valid = !(isNaN(dose) || dose <= 0);
+                const touched = raw !== "" || el.dose.validity.badInput;
+                return { dose, valid, touched };
+            }
+
+            function restartAnimation(node, cls) {
+                node.classList.remove(cls);
+                void node.offsetWidth;
+                node.classList.add(cls);
+            }
+
+            // Species pickers
+            function buildChips(grid, group, selected) {
+                speciesList.forEach(function (sp) {
+                    const id = group + "-" + sp;
+                    const chip = document.createElement("div");
+                    chip.className = "chip";
+                    chip.innerHTML =
+                        '<input type="radio" name="' + group + '" id="' + id + '" value="' + sp + '"' + (sp === selected ? " checked" : "") + ">" +
+                        '<label for="' + id + '">' +
+                            '<span class="chip-icon">' + icon(sp) + "</span>" +
+                            '<span class="chip-name">' + speciesNames[sp] + "</span>" +
+                            '<span class="chip-weight">' + formatWeight(averageWeights[sp]) + "</span>" +
+                        "</label>";
+                    grid.appendChild(chip);
+                });
+            }
+
+            buildChips(el.sourceGrid, "source", state.source);
+            buildChips(el.targetGrid, "target", state.target);
+
+            // Overview cards
+            speciesList.forEach(function (sp) {
+                const li = document.createElement("li");
+                li.innerHTML =
+                    '<button type="button" class="g-card" aria-pressed="false">' +
+                        '<span class="g-tag from" hidden>from</span>' +
+                        '<span class="g-tag yours" hidden>your animal</span>' +
+                        '<span class="g-top">' +
+                            '<span class="g-icon">' + icon(sp) + "</span>" +
+                            '<span class="g-name">' + speciesNames[sp] + '<span class="g-meta">std. ' + formatWeight(averageWeights[sp]) + "</span></span>" +
+                        "</span>" +
+                        '<span class="g-dose"><span class="js-dose">' + DASH + "</span> <small>mg/kg</small></span>" +
+                        '<span class="g-abs"><span class="js-abs">' + DASH + "</span> mg absolute</span>" +
+                        '<span class="g-cta"></span>' +
+                    "</button>";
+                el.glance.appendChild(li);
+
+                const btn = li.querySelector("button");
+                btn.addEventListener("click", function () { selectTarget(sp, true); });
+
+                cards[sp] = {
+                    btn: btn,
+                    dose: li.querySelector(".js-dose"),
+                    abs: li.querySelector(".js-abs"),
+                    from: li.querySelector(".from"),
+                    yours: li.querySelector(".yours"),
+                    cta: li.querySelector(".g-cta")
+                };
+            });
+
+            function update() {
+                const d = readDose();
+                const showError = d.touched && !d.valid;
+
+                el.doseBox.classList.toggle("is-error", showError);
+                el.doseHint.classList.toggle("is-error", showError);
+                el.doseHint.textContent = showError ? "Enter a dose greater than 0." : "Dose in mg per kg of body weight.";
+                el.clearDose.hidden = !d.touched;
+
+                el.glanceHint.textContent = d.valid
+                    ? "Tap an animal to use it in step 2."
+                    : "Enter a dose in step 1 to fill these in.";
+
+                speciesList.forEach(function (t) {
+                    const c = cards[t];
+                    if (d.valid) {
+                        const result = convertDose(state.source, d.dose, t);
+                        c.dose.textContent = result.targetDose.toFixed(2);
+                        c.abs.textContent = result.convertedAbsoluteDose.toFixed(2);
+                    } else {
+                        c.dose.textContent = DASH;
+                        c.abs.textContent = DASH;
+                    }
+                });
+
+                el.copyBtn.disabled = !d.valid;
+                updateMarks();
+                updateActual();
+            }
+
+            function updateMarks() {
+                speciesList.forEach(function (t) {
+                    const c = cards[t];
+                    const isTarget = t === state.target;
+                    c.from.hidden = t !== state.source;
+                    c.yours.hidden = !isTarget;
+                    c.btn.classList.toggle("is-target", isTarget);
+                    c.btn.setAttribute("aria-pressed", String(isTarget));
+                    c.cta.innerHTML = isTarget ? checkIcon + "In step 2" : "Use in step 2" + arrowIcon;
+                });
+            }
+
+            function updateActual() {
+                const t = state.target;
+                const kgRaw = el.weightKg.value;
+                const gmRaw = el.weightGm.value;
+                state.weights[t] = { kg: kgRaw, gm: gmRaw };
+                state.lastActual = null;
+
+                const d = readDose();
+                const weightKg = parseFloat(kgRaw) || 0;
+                const weightGm = parseFloat(gmRaw) || 0;
+                const badInput = el.weightKg.validity.badInput || el.weightGm.validity.badInput;
+
+                let value = DASH;
+                let note = "";
+                let isError = false;
+
+                if (!d.valid) {
+                    note = "Enter a dose in step 1 first.";
+                    el.factDose.textContent = DASH;
+                    el.factAbs.textContent = DASH;
+                } else {
+                    const r = calculateActualDose(state.source, d.dose, t, weightKg, weightGm);
+                    el.factDose.textContent = r.dosePerKg.toFixed(2) + " mg/kg";
+                    el.factAbs.textContent = r.absoluteDose.toFixed(2) + " mg";
+
+                    if (badInput || weightKg < 0 || weightGm < 0) {
+                        note = "Enter a weight of 0 or more in each box.";
+                        isError = true;
+                    } else if (kgRaw === "" && gmRaw === "") {
+                        note = "Now enter the " + lower(t) + "'s weight above.";
+                    } else if (r.totalWeight <= 0) {
+                        note = "Weight must be more than 0.";
+                        isError = true;
+                    } else {
+                        value = r.actualDose.toFixed(2) + "<small>mg</small>";
+                        note = r.dosePerKg.toFixed(2) + " mg/kg × " + formatKg(r.totalWeight) + " kg";
+                        state.lastActual = r;
+                    }
+                }
+
+                if (el.actualValue.innerHTML !== value) {
+                    el.actualValue.innerHTML = value;
+                    if (value !== DASH) restartAnimation(el.note, "bump");
+                }
+                el.actualNote.textContent = note;
+                el.actualNote.classList.toggle("is-error", isError);
+            }
+
+            function refreshTargetText() {
+                const t = state.target;
+                el.weightLabel.textContent = "How much does the " + lower(t) + " weigh?";
+                el.noteLabel.textContent = "Actual dose for the " + lower(t);
+                el.factAbsStd.textContent = "std. " + formatWeight(averageWeights[t]);
+                el.useStandard.textContent = "Use standard weight (" + formatWeight(averageWeights[t]) + ")";
+            }
+
+            function selectTarget(sp, reveal) {
+                if (sp !== state.target) {
+                    state.target = sp;
+                    const saved = state.weights[sp] || { kg: "", gm: "" };
+                    el.weightKg.value = saved.kg;
+                    el.weightGm.value = saved.gm;
+                }
+                document.getElementById("target-" + sp).checked = true;
+                refreshTargetText();
+                updateMarks();
+                updateActual();
+
+                if (reveal) {
+                    el.animalCard.scrollIntoView({ behavior: "smooth", block: "start" });
+                    restartAnimation(el.animalCard, "wiggle");
+                    if (window.matchMedia("(pointer: fine)").matches) el.weightKg.focus({ preventScroll: true });
+                }
+            }
+
+            function buildCopyText() {
+                const d = readDose();
+                const lines = ["Dose conversion from " + speciesNames[state.source] + " at " + d.dose + " mg/kg"];
+                speciesList.forEach(function (t) {
+                    const r = convertDose(state.source, d.dose, t);
+                    lines.push(
+                        speciesNames[t] + " (" + formatWeight(averageWeights[t]) + "): " +
+                        r.targetDose.toFixed(2) + " mg/kg, " + r.convertedAbsoluteDose.toFixed(2) + " mg absolute"
+                    );
+                });
+                if (state.lastActual) {
+                    lines.push(
+                        "Actual dose for a " + formatKg(state.lastActual.totalWeight) + " kg " + lower(state.target) + ": " +
+                        state.lastActual.actualDose.toFixed(2) + " mg"
+                    );
+                }
+                return lines.join("\n");
+            }
+
+            function copyText(text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallbackCopy(text); });
+                }
+                return Promise.resolve(fallbackCopy(text));
+            }
+
+            function fallbackCopy(text) {
+                const area = document.createElement("textarea");
+                area.value = text;
+                area.setAttribute("readonly", "");
+                area.style.position = "fixed";
+                area.style.opacity = "0";
+                document.body.appendChild(area);
+                area.select();
+                let ok = false;
+                try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+                area.remove();
+                return ok;
+            }
+
+            function blurOnEnter(e) {
+                // Close the phone keyboard so the result is visible
+                if (e.key === "Enter" && window.matchMedia("(pointer: coarse)").matches) e.target.blur();
+            }
+
+            let copyTimer = null;
+
+            // Events
+            el.sourceGrid.addEventListener("change", function (e) {
+                state.source = e.target.value;
+                update();
+            });
+
+            el.targetGrid.addEventListener("change", function (e) {
+                selectTarget(e.target.value, false);
+            });
+
+            el.dose.addEventListener("input", update);
+            el.weightKg.addEventListener("input", updateActual);
+            el.weightGm.addEventListener("input", updateActual);
+            [el.dose, el.weightKg, el.weightGm].forEach(function (input) {
+                input.addEventListener("keydown", blurOnEnter);
+            });
+
+            el.clearDose.addEventListener("click", function () {
+                el.dose.value = "";
+                update();
+                el.dose.focus();
+            });
+
+            el.useStandard.addEventListener("click", function () {
+                const w = averageWeights[state.target];
+                if (w >= 1) {
+                    el.weightKg.value = String(w);
+                    el.weightGm.value = "";
+                } else {
+                    el.weightKg.value = "";
+                    el.weightGm.value = String(Math.round(w * 1000));
+                }
+                updateActual();
+            });
+
+            el.copyBtn.addEventListener("click", function () {
+                copyText(buildCopyText()).then(function (ok) {
+                    el.copyLabel.textContent = ok ? "Copied!" : "Copy failed";
+                    el.copyBtn.classList.toggle("is-done", ok);
+                    clearTimeout(copyTimer);
+                    copyTimer = setTimeout(function () {
+                        el.copyLabel.textContent = "Copy";
+                        el.copyBtn.classList.remove("is-done");
+                    }, 1600);
+                });
+            });
+
+            refreshTargetText();
+            update();
+
+            if (window.matchMedia("(pointer: fine)").matches) el.dose.focus({ preventScroll: true });
+        })();
     </script>
 </body>
 </html>
